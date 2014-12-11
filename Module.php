@@ -47,6 +47,7 @@ class Module
         $events       = $app->getEventManager();
 
         $events->attachAggregate($services->get('ZF\Rest\OptionsListener'));
+        $events->attach($services->get('ZF\Rest\ExceptionsListener'));
 
         $sharedEvents = $events->getSharedManager();
         $sharedEvents->attachAggregate($services->get('ZF\Rest\RestParametersListener'));

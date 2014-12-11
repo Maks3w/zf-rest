@@ -34,6 +34,7 @@ return array(
 
     'service_manager' => array(
         'invokables' => array(
+            'ZF\Rest\ExceptionsListener' => 'ZF\Rest\Listener\ExceptionsListener',
             'ZF\Rest\RestParametersListener' => 'ZF\Rest\Listener\RestParametersListener',
         ),
         'factories' => array(

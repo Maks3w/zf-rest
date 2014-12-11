@@ -309,11 +309,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('create.pre', $this, array('data' => $data));
 
-        try {
-            $entity = $this->getResource()->create($data);
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $entity = $this->getResource()->create($data);
 
         if ($entity instanceof ApiProblem
             || $entity instanceof ApiProblemResponse
@@ -353,11 +349,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('delete.pre', $this, array('id' => $id));
 
-        try {
-            $result = $this->getResource()->delete($id);
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $result = $this->getResource()->delete($id);
 
         $result = $result ?: new ApiProblem(422, 'Unable to delete entity.');
 
@@ -380,11 +372,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('deleteList.pre', $this, array());
 
-        try {
-            $result = $this->getResource()->deleteList();
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $result = $this->getResource()->deleteList();
 
         $result = $result ?: new ApiProblem(422, 'Unable to delete collection.');
 
@@ -414,11 +402,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('get.pre', $this, array('id' => $id));
 
-        try {
-            $entity = $this->getResource()->fetch($id);
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $entity = $this->getResource()->fetch($id);
 
         $entity = $entity ?: new ApiProblem(404, 'Entity not found.');
 
@@ -453,11 +437,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('getList.pre', $this, array());
 
-        try {
-            $collection = $this->getResource()->fetchAll();
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $collection = $this->getResource()->fetchAll();
 
         if ($collection instanceof ApiProblem
             || $collection instanceof ApiProblemResponse
@@ -553,11 +533,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('patch.pre', $this, array('id' => $id, 'data' => $data));
 
-        try {
-            $entity = $this->getResource()->patch($id, $data);
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $entity = $this->getResource()->patch($id, $data);
 
         if ($entity instanceof ApiProblem
             || $entity instanceof ApiProblemResponse
@@ -594,11 +570,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('update.pre', $this, array('id' => $id, 'data' => $data));
 
-        try {
-            $entity = $this->getResource()->update($id, $data);
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $entity = $this->getResource()->update($id, $data);
 
         if ($entity instanceof ApiProblem
             || $entity instanceof ApiProblemResponse
@@ -630,11 +602,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('patchList.pre', $this, array('data' => $data));
 
-        try {
-            $collection = $this->getResource()->patchList($data);
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $collection = $this->getResource()->patchList($data);
 
         if ($collection instanceof ApiProblem
             || $collection instanceof ApiProblemResponse
@@ -666,11 +634,7 @@ class RestController extends AbstractRestfulController
         $events = $this->getEventManager();
         $events->trigger('replaceList.pre', $this, array('data' => $data));
 
-        try {
-            $collection = $this->getResource()->replaceList($data);
-        } catch (\Exception $e) {
-            return new ApiProblem($this->getHttpStatusCodeFromException($e), $e);
-        }
+        $collection = $this->getResource()->replaceList($data);
 
         if ($collection instanceof ApiProblem
             || $collection instanceof ApiProblemResponse
@@ -728,24 +692,6 @@ class RestController extends AbstractRestfulController
         $allow->disallowMethods(array_keys($allMethods));
         $allow->allowMethods($methods);
         return $allow;
-    }
-
-    /**
-     * Ensure we have a valid HTTP status code for an ApiProblem
-     *
-     * @param \Exception $e
-     * @return int
-     */
-    protected function getHttpStatusCodeFromException(\Exception $e)
-    {
-        $code = $e->getCode();
-        if (!is_int($code)
-            || $code < 100
-            || $code >= 600
-        ) {
-            return 500;
-        }
-        return $code;
     }
 
     /**
